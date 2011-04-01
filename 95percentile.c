@@ -20,6 +20,7 @@ uses uthash from http://uthash.sourceforge.net
 
 #define SUCCESS 0
 #define FAILURE 1
+#define VERSION "1.0"
 
 #define BUFF_SIZE 10240
 
@@ -112,9 +113,10 @@ void run(char *input_filename) {
 
 
 void usage(){
-    fprintf(stderr, "usage: 95percentile\n");
+    fprintf(stderr, "usage: 95percentile (Version %s)\n", VERSION);
     fprintf(stderr, "\t-i /path/to/input.json (optional; default is stdin)\n");
-    fprintf(stderr, "\t-v verbose output (to stderr) (use multiple times for more verbose output)\n");
+    fprintf(stderr, "\t-d debug output (to stderr)\n");
+    fprintf(stderr, "\t-v version\n");
     fprintf(stderr, "\t-h this help\n");
 }
 
@@ -123,12 +125,16 @@ int main(int argc, char **argv)
     int ch;
     char *input_filename = NULL;
     
-    while ((ch = getopt(argc, argv, "i:vh")) != -1) {
+    while ((ch = getopt(argc, argv, "i:vdh")) != -1) {
         switch (ch) {
         case 'i':
             input_filename = optarg;
             break;
         case 'v':
+            fprintf(stdout, "Version %s\n", VERSION);
+            exit(0);
+            break;
+        case 'd':
             verbose++;
             break;
         case 'h':
