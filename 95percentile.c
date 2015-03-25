@@ -28,6 +28,7 @@ void run(char *input_filename);
 struct NumericEntry *new_numeric_entry(char *key);
 int sort_numeric_entry(struct NumericEntry *a, struct NumericEntry *b);
 void usage();
+double perc = .95;
 
 int verbose=0;
 
@@ -90,7 +91,7 @@ void run(char *input_filename) {
     
     HASH_SORT(entries, sort_numeric_entry);
     
-    nintey_five_position = total_entries * .95;
+    nintey_five_position = total_entries * perc;
     HASH_ITER(hh, entries, entry, tmp_entry) {
         current += entry->occurances;
         if (current >= nintey_five_position) {
@@ -114,6 +115,7 @@ void run(char *input_filename) {
 
 void usage(){
     fprintf(stderr, "usage: 95percentile (Version %s)\n", VERSION);
+    fprintf(stderr, "\t-p 0.95 (your percentile value)\n");
     fprintf(stderr, "\t-i /path/to/input.json (optional; default is stdin)\n");
     fprintf(stderr, "\t-d debug output (to stderr)\n");
     fprintf(stderr, "\t-v version\n");
@@ -125,7 +127,7 @@ int main(int argc, char **argv)
     int ch;
     char *input_filename = NULL;
     
-    while ((ch = getopt(argc, argv, "i:vdh")) != -1) {
+    while ((ch = getopt(argc, argv, "i:vdhp:")) != -1) {
         switch (ch) {
         case 'i':
             input_filename = optarg;
@@ -140,6 +142,9 @@ int main(int argc, char **argv)
         case 'h':
             usage();
             exit(0);
+            break;
+        case 'p':
+            perc = atof(optarg);
             break;
         default:
             usage();
